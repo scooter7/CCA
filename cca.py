@@ -24,11 +24,11 @@ def upload_to_s3(s3_client, data, bucket_name, file_name):
     s3_client.put_object(Bucket=bucket_name, Key=file_name, Body=csv_buffer.getvalue())
 
 def display_data_table(data):
-    filter_column = st.selectbox("Select column to filter by", data.columns)
-    filter_value = st.text_input("Enter value for filtering")
+    filter_column = st.sidebar.selectbox("Select column to filter by", data.columns)
+    filter_value = st.sidebar.text_input("Enter value for filtering")
 
     if filter_value:
-        filtered_data = data[data[filter_column].astype(str).str.contains(filter_value)]
+        filtered_data = data[data[filter_column].astype(str).str.contains(filter_value, na=False)]
     else:
         filtered_data = data
 
@@ -38,7 +38,14 @@ def main():
     st.title("Institutional Analysis Tool")
     s3_client = init_s3_client()
 
-    # Data upload and saving functionality
+    if 'data' not in st.session_state or st.button("Load Data from S3"):
+        st.session_state.data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
+        if st.session_state.data is None:
+            st.error("No data found in S3.")
+
+    if 'data' in st.session_state and st.session_state.data is not None:
+        display_data_table(st.session_state.data)
+
     with st.form("institution_info"):
         full_name = st.text_input("Institution’s Full Name")
         abbreviation = st.text_input("Institution’s Abbreviation")
@@ -63,14 +70,6 @@ def main():
             consolidated_data = pd.concat([existing_data, new_data], ignore_index=True) if existing_data is not None else new_data
             upload_to_s3(s3_client, consolidated_data, 'Scooter', 'competitiveanalyses.csv')
             st.success("Data Saved Successfully!")
-
-    # Data loading and display functionality
-    if st.button("Load Data from S3"):
-        data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
-        if data is not None:
-            display_data_table(data)
-        else:
-            st.error("No data found in S3.")
 
 if __name__ == "__main__":
     main()
