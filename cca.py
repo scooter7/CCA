@@ -186,7 +186,7 @@ def main():
                 upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
                 st.success("Web Imagery Archetyping Data Updated Successfully!")
 
-    with st.form("web_imagery_notetaking"):
+        with st.form("web_imagery_notetaking"):
         web_imagery_note_record_id = st.number_input("Enter Record ID to Update for Web Imagery Notetaking", min_value=1, step=1)
         dimensions = st.text_area("What dimensions do you see in the archetypes?")
         best_practices = st.selectbox("Are best practices used?", ["Yes", "No"], key="best_practices_wi")
@@ -195,24 +195,25 @@ def main():
         visual_hierarchy = st.selectbox("Is visual hierarchy used to allow readers to perceive what is important and make connections?", ["Yes", "No"], key="visual_hierarchy_wi")
         authenticity_wi = st.selectbox("How authentic do particular archetype expressions feel?", range(1, 6), key="authenticity_wi")
         off_archetypes_wi = st.selectbox("Do any archetypes feel 'off'?", ["Yes", "No"], key="off_archetypes_wi")
-        beige_appearance = st.text_area("How and where does Beige appear--in other words, where is the most opportunity for improvement?")
-        user_experience = st.text_area("What is the user experience like?")
-        other_comments = st.text_area("Other")
+        beige_appearance_wi = st.text_area("How and where does Beige appear--in other words, where is the most opportunity for improvement?")
+        user_experience_wi = st.text_area("What is the user experience like?")
+        other_comments_wi = st.text_area("Other")
 
-        submit_web_imagery_note_button = st.form_submit_button
+        submit_web_imagery_note_button = st.form_submit_button("Submit Web Imagery Notetaking")
+
         if submit_web_imagery_note_button:
             if web_imagery_note_record_id in existing_data['Record ID'].values:
                 web_imagery_note_data = {
-                    "WI - Dimensions": dimensions,
-                    "WI - Best Practices": best_practices,
-                    "WI - Negative Space": negative_space,
-                    "WI - Key Elements": key_elements,
-                    "WI - Visual Hierarchy": visual_hierarchy,
-                    "WI - Authenticity": authenticity_wi,
-                    "WI - Off Archetypes": off_archetypes_wi,
-                    "WI - Beige Appearance": beige_appearance,
-                    "WI - User Experience": user_experience,
-                    "WI - Other Comments": other_comments
+                    "WIN - Dimensions": dimensions,
+                    "WIN - Best Practices": best_practices,
+                    "WIN - Negative Space": negative_space,
+                    "WIN - Key Elements": key_elements,
+                    "WIN - Visual Hierarchy": visual_hierarchy,
+                    "WIN - Authenticity": authenticity_wi,
+                    "WIN - Off Archetypes": off_archetypes_wi,
+                    "WIN - Beige Appearance": beige_appearance_wi,
+                    "WIN - User Experience": user_experience_wi,
+                    "WIN - Other Comments": other_comments_wi
                 }
                 for key, value in web_imagery_note_data.items():
                     existing_data.loc[existing_data['Record ID'] == web_imagery_note_record_id, key] = value
