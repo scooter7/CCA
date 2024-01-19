@@ -29,6 +29,12 @@ def display_data_table(data):
     filtered_data = data[data[filter_column].astype(str).str.contains(filter_value, na=False)] if filter_value else data
     st.dataframe(filtered_data)
 
+def generate_unique_record_id(existing_data):
+    if existing_data.empty or 'Record ID' not in existing_data.columns:
+        return 1
+    else:
+        return existing_data['Record ID'].max() + 1
+
 def main():
     st.title("Institutional Analysis Tool")
     s3_client = init_s3_client()
