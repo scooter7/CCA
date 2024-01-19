@@ -119,22 +119,56 @@ def main():
                 st.error("Record ID does not exist. Please enter a valid ID.")
 
     with st.form("web_design_archetyping"):
-        web_design_record_id = st.number_input("Enter Record ID to Update for Web Design", min_value=1, step=1)
+        web_design_record_id = st.number_input("Enter Record ID to Update for Web Design Archetyping", min_value=1, step=1)
         web_design_archetypes = {color: st.slider(f"Web Design - {color} Percentage", 0, 100, 10, 10, key=f"web_{color}") for color in ["Purple", "Green", "Blue", "Maroon", "Yellow", "Orange", "Pink", "Red", "Silver", "Beige"]}
         submit_web_design_button = st.form_submit_button("Submit Web Design Archetyping")
 
         if submit_web_design_button:
-            total_web_design_percentage = sum(web_design_archetypes.values())
-            if total_web_design_percentage != 100:
-                st.error("Total percentage for Web Design Archetyping must add up to 100%. Currently, it adds up to " + str(total_web_design_percentage) + "%.")
+            total_percentage = sum(web_design_archetypes.values())
+            if total_percentage != 100:
+                st.error("Total percentage must add up to 100%. Currently, it adds up to " + str(total_percentage) + "%.")
             else:
-                if web_design_record_id in existing_data['Record ID'].values:
-                    for key, value in web_design_archetypes.items():
-                        existing_data.loc[existing_data['Record ID'] == web_design_record_id, f"Web Design - {key}"] = value
-                    upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
-                    st.success("Web Design Archetyping Data Updated Successfully!")
-                else:
-                    st.error("Record ID does not exist. Please enter a valid ID.")
+                web_design_data = {f"Web Design - {color} Percentage": percentage for color, percentage in web_design_archetypes.items()}
+                for key, value in web_design_data.items():
+                    existing_data.loc[existing_data['Record ID'] == web_design_record_id, key] = value
+                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                st.success("Web Design Archetyping Data Updated Successfully!")
+
+    with st.form("web_design_notetaking"):
+        web_design_note_record_id = st.number_input("Enter Record ID to Update for Web Design Notetaking", min_value=1, step=1)
+        dimensions = st.text_area("What dimensions do you see in the archetypes?")
+        best_practices = st.selectbox("Are best practices used?", ["Yes", "No"], key="best_practices")
+        negative_space = st.selectbox("Is negative space used strategically?", ["Yes", "No"], key="negative_space")
+        key_elements = st.selectbox("Are key elements repeated to create unity and consistency to convey a clear visual brand identity?", ["Yes", "No"], key="key_elements")
+        visual_hierarchy = st.selectbox("Is visual hierarchy used to allow readers to perceive what is important and make connections?", ["Yes", "No"], key="visual_hierarchy")
+        authenticity_wdn = st.selectbox("How authentic do particular archetype expressions feel?", range(1, 6), key="authenticity_wdn")
+        off_archetypes_wdn = st.selectbox("Do any archetypes feel 'off'?", ["Yes", "No"], key="off_archetypes_wdn")
+        beige_appearance = st.text_area("How and where does Beige appear--in other words, where is the most opportunity for improvement?")
+        user_experience = st.text_area("What is the user experience like?")
+        other_comments = st.text_area("Other")
+
+        submit_web_design_note_button = st.form_submit_button("Submit Web Design Notetaking")
+
+        if submit_web_design_note_button:
+            if web_design_note_record_id in existing_data['Record ID'].values:
+                web_design_note_data = {
+                    "WDN - Dimensions": dimensions,
+                    "WDN - Best Practices": best_practices,
+                    "WDN - Negative Space": negative_space,
+                    "WDN - Key Elements": key_elements,
+                    "WDN - Visual Hierarchy": visual_hierarchy,
+                    "WDN - Authenticity": authenticity_wdn,
+                    "WDN - Off Archetypes": off_archetypes_wdn,
+                    "WDN - Beige Appearance": beige_appearance,
+                    "WDN - User Experience": user_experience,
+                    "WDN - Other Comments": other_comments
+                }
+                for key, value in web_design_note_data.items():
+                    existing_data.loc[existing_data['Record ID'] == web_design_note_record_id, key] = value
+                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                st.success("Web Design Notetaking Data Updated Successfully!")
+            else:
+                st.error("Record ID does not exist. Please enter a valid ID.")
 
 if __name__ == "__main__":
     main()
