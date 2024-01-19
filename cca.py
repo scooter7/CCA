@@ -39,7 +39,7 @@ def main():
     s3_client = init_s3_client()
 
     existing_data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
-    if existing_data is None:
+    if existing_data is None or 'Record ID' not in existing_data.columns:
         existing_data = pd.DataFrame(columns=['Record ID'])
     else:
         if 'data' not in st.session_state or st.button("Reload Data from S3"):
@@ -99,7 +99,7 @@ def main():
         submit_narrative_button = st.form_submit_button("Submit Narrative Analysis")
 
         if submit_narrative_button:
-            if 'Record ID' in existing_data.columns and narrative_record_id in existing_data['Record ID'].values:
+            if narrative_record_id in existing_data['Record ID'].values:
                 narrative_data = {
                     "Dimensions": dimensions,
                     "Compelling Evidence": compelling_evidence,
@@ -123,3 +123,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
