@@ -34,6 +34,12 @@ def display_data_table(data):
 
     st.dataframe(filtered_data)
 
+def generate_unique_record_id(existing_data):
+    if existing_data.empty:
+        return 1
+    else:
+        return existing_data['Record ID'].max() + 1
+
 def main():
     st.title("Institutional Analysis Tool")
     s3_client = init_s3_client()
@@ -60,8 +66,10 @@ def main():
             if total_percentage != 100:
                 st.error("Total percentage must add up to 100%. Currently, it adds up to " + str(total_percentage) + "%.")
             else:
+                if record_id == 0:
+                    record_id = generate_unique_record_id(existing_data)
                 inst_info_data = {
-                    "Record ID": record_id if record_id != 0 else (existing_data['Record ID'].max() + 1 if not existing_data.empty else 1),
+                    "Record ID": record_id,
                     "Full Name": full_name,
                     "Abbreviation": abbreviation,
                     "Type": institution_type,
@@ -71,7 +79,7 @@ def main():
                     **narrative_archetypes
                 }
                 new_data = pd.DataFrame([inst_info_data])
-                if record_id == 0:
+                if record_id not in existing_data['Record ID'].values:
                     consolidated_data = pd.concat([existing_data, new_data], ignore_index=True)
                 else:
                     existing_data.update(new_data)
