@@ -170,5 +170,56 @@ def main():
             else:
                 st.error("Record ID does not exist. Please enter a valid ID.")
 
+    with st.form("web_imagery_archetyping"):
+        web_imagery_record_id = st.number_input("Enter Record ID to Update for Web Imagery Archetyping", min_value=1, step=1)
+        web_imagery_archetypes = {color: st.slider(f"Web Imagery - {color} Percentage", 0, 100, 10, 10, key=f"web_imagery_{color}") for color in ["Purple", "Green", "Blue", "Maroon", "Yellow", "Orange", "Pink", "Red", "Silver", "Beige"]}
+        submit_web_imagery_button = st.form_submit_button("Submit Web Imagery Archetyping")
+
+        if submit_web_imagery_button:
+            total_percentage = sum(web_imagery_archetypes.values())
+            if total_percentage != 100:
+                st.error("Total percentage must add up to 100%. Currently, it adds up to " + str(total_percentage) + "%.")
+            else:
+                web_imagery_data = {f"Web Imagery - {color} Percentage": percentage for color, percentage in web_imagery_archetypes.items()}
+                for key, value in web_imagery_data.items():
+                    existing_data.loc[existing_data['Record ID'] == web_imagery_record_id, key] = value
+                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                st.success("Web Imagery Archetyping Data Updated Successfully!")
+
+    with st.form("web_imagery_notetaking"):
+        web_imagery_note_record_id = st.number_input("Enter Record ID to Update for Web Imagery Notetaking", min_value=1, step=1)
+        dimensions = st.text_area("What dimensions do you see in the archetypes?")
+        best_practices = st.selectbox("Are best practices used?", ["Yes", "No"], key="best_practices_wi")
+        negative_space = st.selectbox("Is negative space used strategically?", ["Yes", "No"], key="negative_space_wi")
+        key_elements = st.selectbox("Are key elements repeated to create unity and consistency to convey a clear visual brand identity?", ["Yes", "No"], key="key_elements_wi")
+        visual_hierarchy = st.selectbox("Is visual hierarchy used to allow readers to perceive what is important and make connections?", ["Yes", "No"], key="visual_hierarchy_wi")
+        authenticity_wi = st.selectbox("How authentic do particular archetype expressions feel?", range(1, 6), key="authenticity_wi")
+        off_archetypes_wi = st.selectbox("Do any archetypes feel 'off'?", ["Yes", "No"], key="off_archetypes_wi")
+        beige_appearance = st.text_area("How and where does Beige appear--in other words, where is the most opportunity for improvement?")
+        user_experience = st.text_area("What is the user experience like?")
+        other_comments = st.text_area("Other")
+
+        submit_web_imagery_note_button = st.form_submit_button
+        if submit_web_imagery_note_button:
+            if web_imagery_note_record_id in existing_data['Record ID'].values:
+                web_imagery_note_data = {
+                    "WI - Dimensions": dimensions,
+                    "WI - Best Practices": best_practices,
+                    "WI - Negative Space": negative_space,
+                    "WI - Key Elements": key_elements,
+                    "WI - Visual Hierarchy": visual_hierarchy,
+                    "WI - Authenticity": authenticity_wi,
+                    "WI - Off Archetypes": off_archetypes_wi,
+                    "WI - Beige Appearance": beige_appearance,
+                    "WI - User Experience": user_experience,
+                    "WI - Other Comments": other_comments
+                }
+                for key, value in web_imagery_note_data.items():
+                    existing_data.loc[existing_data['Record ID'] == web_imagery_note_record_id, key] = value
+                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                st.success("Web Imagery Notetaking Data Updated Successfully!")
+            else:
+                st.error("Record ID does not exist. Please enter a valid ID.")
+
 if __name__ == "__main__":
     main()
