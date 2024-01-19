@@ -57,19 +57,23 @@ def main():
         submit_button = st.form_submit_button("Submit")
 
         if submit_button:
-            new_data = pd.DataFrame([{
-                "Full Name": full_name,
-                "Abbreviation": abbreviation,
-                "Type": institution_type,
-                "Analysis Date": analysis_date.strftime("%Y-%m"),
-                "Client Institution": client_institution,
-                "Website URL": website_url,
-                **narrative_archetypes
-            }])
-            existing_data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
-            consolidated_data = pd.concat([existing_data, new_data], ignore_index=True) if existing_data is not None else new_data
-            upload_to_s3(s3_client, consolidated_data, 'Scooter', 'competitiveanalyses.csv')
-            st.success("Data Saved Successfully!")
+            total_percentage = sum(narrative_archetypes.values())
+            if total_percentage != 100:
+                st.error("Total percentage must add up to 100%. Currently, it adds up to " + str(total_percentage) + "%.")
+            else:
+                new_data = pd.DataFrame([{
+                    "Full Name": full_name,
+                    "Abbreviation": abbreviation,
+                    "Type": institution_type,
+                    "Analysis Date": analysis_date.strftime("%Y-%m"),
+                    "Client Institution": client_institution,
+                    "Website URL": website_url,
+                    **narrative_archetypes
+                }])
+                existing_data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
+                consolidated_data = pd.concat([existing_data, new_data], ignore_index=True) if existing_data is not None else new_data
+                upload_to_s3(s3_client, consolidated_data, 'Scooter', 'competitiveanalyses.csv')
+                st.success("Data Saved Successfully!")
 
 if __name__ == "__main__":
     main()
