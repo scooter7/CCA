@@ -46,10 +46,35 @@ def main():
     if 'data' in st.session_state and st.session_state.data is not None:
         display_data_table(st.session_state.data)
 
-    # Data entry and saving functionality
-    # ... (Your existing code for the first form)
+    with st.form("institution_info"):
+        full_name = st.text_input("Institution’s Full Name")
+        abbreviation = st.text_input("Institution’s Abbreviation")
+        institution_type = st.selectbox("Type of Institution", ["Community College", "Private", "Public", "School", "Other"])
+        analysis_date = st.date_input("Month/Year of Analysis", datetime.now())
+        client_institution = st.text_input("Client Institution")
+        website_url = st.text_input("Main Website URL")
+        narrative_archetypes = {color: st.slider(f"{color} Archetype Percentage", 0, 100, 10, 10, key=color) for color in ["Purple", "Green", "Blue", "Maroon", "Yellow", "Orange", "Pink", "Red", "Silver", "Beige"]}
+        submit_button = st.form_submit_button("Submit")
 
-    # Narrative Notetaking functionality
+        if submit_button:
+            total_percentage = sum(narrative_archetypes.values())
+            if total_percentage != 100:
+                st.error("Total percentage must add up to 100%. Currently, it adds up to " + str(total_percentage) + "%.")
+            else:
+                new_data = pd.DataFrame([{
+                    "Full Name": full_name,
+                    "Abbreviation": abbreviation,
+                    "Type": institution_type,
+                    "Analysis Date": analysis_date.strftime("%Y-%m"),
+                    "Client Institution": client_institution,
+                    "Website URL": website_url,
+                    **narrative_archetypes
+                }])
+                existing_data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
+                consolidated_data = pd.concat([existing_data, new_data], ignore_index=True) if existing_data is not None else new_data
+                upload_to_s3(s3_client, consolidated_data, 'Scooter', 'competitiveanalyses.csv')
+                st.success("Data Saved Successfully!")
+
     st.subheader("Narrative Notetaking")
     with st.form("narrative_notetaking"):
         dimensions = st.text_area("What dimensions do you see in the archetypes?")
