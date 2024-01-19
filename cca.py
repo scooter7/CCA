@@ -16,7 +16,7 @@ def download_from_s3(s3_client, bucket_name, file_name):
         obj = s3_client.get_object(Bucket=bucket_name, Key=file_name)
         return pd.read_csv(io.BytesIO(obj['Body'].read()))
     except s3_client.exceptions.NoSuchKey:
-        return None
+        return pd.DataFrame(columns=['Record ID'])
 
 def upload_to_s3(s3_client, data, bucket_name, file_name):
     csv_buffer = io.StringIO()
@@ -39,13 +39,10 @@ def main():
     s3_client = init_s3_client()
 
     existing_data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
-    if existing_data is None or 'Record ID' not in existing_data.columns:
-        existing_data = pd.DataFrame(columns=['Record ID'])
-    else:
-        if 'data' not in st.session_state or st.button("Reload Data from S3"):
-            st.session_state.data = existing_data
-        if 'data' in st.session_state and st.session_state.data is not None:
-            display_data_table(st.session_state.data)
+    if 'data' not in st.session_state or st.button("Reload Data from S3"):
+        st.session_state.data = existing_data
+    if 'data' in st.session_state and st.session_state.data is not None:
+        display_data_table(st.session_state.data)
 
     with st.form("institution_info"):
         record_id = st.number_input("Enter Record ID for Update (0 for new record)", min_value=0, step=1)
@@ -123,4 +120,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
