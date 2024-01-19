@@ -118,5 +118,23 @@ def main():
             else:
                 st.error("Record ID does not exist. Please enter a valid ID.")
 
+    with st.form("web_design_archetyping"):
+        web_design_record_id = st.number_input("Enter Record ID to Update for Web Design", min_value=1, step=1)
+        web_design_archetypes = {color: st.slider(f"Web Design - {color} Percentage", 0, 100, 10, 10, key=f"web_{color}") for color in ["Purple", "Green", "Blue", "Maroon", "Yellow", "Orange", "Pink", "Red", "Silver", "Beige"]}
+        submit_web_design_button = st.form_submit_button("Submit Web Design Archetyping")
+
+        if submit_web_design_button:
+            total_web_design_percentage = sum(web_design_archetypes.values())
+            if total_web_design_percentage != 100:
+                st.error("Total percentage for Web Design Archetyping must add up to 100%. Currently, it adds up to " + str(total_web_design_percentage) + "%.")
+            else:
+                if web_design_record_id in existing_data['Record ID'].values:
+                    for key, value in web_design_archetypes.items():
+                        existing_data.loc[existing_data['Record ID'] == web_design_record_id, f"Web Design - {key}"] = value
+                    upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                    st.success("Web Design Archetyping Data Updated Successfully!")
+                else:
+                    st.error("Record ID does not exist. Please enter a valid ID.")
+
 if __name__ == "__main__":
     main()
