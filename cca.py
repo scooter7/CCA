@@ -186,7 +186,7 @@ def main():
                 upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
                 st.success("Web Imagery Archetyping Data Updated Successfully!")
 
-        with st.form("web_imagery_notetaking"):
+    with st.form("web_imagery_notetaking"):
         web_imagery_note_record_id = st.number_input("Enter Record ID to Update for Web Imagery Notetaking", min_value=1, step=1)
         dimensions = st.text_area("What dimensions do you see in the archetypes?")
         best_practices = st.selectbox("Are best practices used?", ["Yes", "No"], key="best_practices_wi")
