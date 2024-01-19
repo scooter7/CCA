@@ -90,7 +90,8 @@ def main():
                     "Beige": beige
                 }
                 if record_id == 0:
-                    existing_data = existing_data.append(inst_info_data, ignore_index=True)
+                    new_data = pd.DataFrame([inst_info_data])
+                    existing_data = pd.concat([existing_data, new_data], ignore_index=True)
                 else:
                     for key, value in inst_info_data.items():
                         existing_data.loc[existing_data['Record ID'] == record_id, key] = value
