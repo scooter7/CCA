@@ -243,23 +243,28 @@ def main():
         submit_imagery_notetaking_button = st.form_submit_button("Submit Imagery Notetaking")
 
     if submit_imagery_notetaking_button:
-        imagery_notetaking_data = {
-            "Imagery Dimensions": imagery_dimensions,
-            "Imagery Authenticity": imagery_authenticity,
-            "Imagery Off Archetypes": imagery_off_archetypes,
-            "Imagery Quality": imagery_quality,
-            "Imagery Expression": imagery_expression,
-            "Imagery Diversity": imagery_diversity,
-            "Imagery Beige Appearance": imagery_beige_appearance,
-            "Imagery Other Comments": imagery_other_comments
-        }
-        new_data = pd.DataFrame([imagery_notetaking_data])
-        if imagery_record_id in existing_data['Record ID'].values:
-            existing_data.update(new_data.set_index('Record ID'), overwrite=False)
-            upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
-            st.success("Imagery Notetaking Data Updated Successfully!")
-        else:
-            st.error("Record ID does not exist. Please enter a valid ID.")
+    imagery_notetaking_data = {
+        "Imagery Dimensions": imagery_dimensions,
+        "Imagery Authenticity": imagery_authenticity,
+        "Imagery Off Archetypes": imagery_off_archetypes,
+        "Imagery Quality": imagery_quality,
+        "Imagery Expression": imagery_expression,
+        "Imagery Diversity": imagery_diversity,
+        "Imagery Beige Appearance": imagery_beige_appearance,
+        "Imagery Other Comments": imagery_other_comments
+    }
+    # Create a DataFrame with the imagery_notetaking_data
+    new_data = pd.DataFrame([imagery_notetaking_data])
+
+    # Ensure that 'Record ID' is present in new_data with a unique value
+    new_data['Record ID'] = imagery_record_id
+
+    if imagery_record_id in existing_data['Record ID'].values:
+        existing_data.update(new_data.set_index('Record ID'), overwrite=False)
+        upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+        st.success("Imagery Notetaking Data Updated Successfully!")
+    else:
+        st.error("Record ID does not exist. Please enter a valid ID.")
 
 if __name__ == "__main__":
     main()
