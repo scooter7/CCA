@@ -243,7 +243,7 @@ def main():
         submit_imagery_notetaking_button = st.form_submit_button("Submit Imagery Notetaking")
 
     if submit_imagery_notetaking_button:
-         imagery_notetaking_data = {
+    imagery_notetaking_data = {
         "Imagery Dimensions": imagery_dimensions,
         "Imagery Authenticity": imagery_authenticity,
         "Imagery Off Archetypes": imagery_off_archetypes,
