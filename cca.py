@@ -42,7 +42,8 @@ def main():
     if 'data' not in st.session_state or st.button("Reload Data from S3"):
         st.session_state.data = existing_data
     if 'data' in st.session_state and st.session_state.data is not None:
-        display_data_table(st.session_state.data)
+        st.write("Data from S3:")
+        st.dataframe(st.session_state.data)
 
     with st.form("institution_info"):
         record_id = st.number_input("Enter Record ID for Update (0 for new record)", min_value=0, step=1)
