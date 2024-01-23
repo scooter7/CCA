@@ -243,15 +243,15 @@ def main():
         submit_imagery_notetaking_button = st.form_submit_button("Submit Imagery Notetaking")
 
     if submit_imagery_notetaking_button:
-    imagery_notetaking_data = {
-        "Imagery Dimensions": imagery_dimensions,
-        "Imagery Authenticity": imagery_authenticity,
-        "Imagery Off Archetypes": imagery_off_archetypes,
-        "Imagery Quality": imagery_quality,
-        "Imagery Expression": imagery_expression,
-        "Imagery Diversity": imagery_diversity,
-        "Imagery Beige Appearance": imagery_beige_appearance,
-        "Imagery Other Comments": imagery_other_comments
+        imagery_notetaking_data = {
+            "Imagery Dimensions": imagery_dimensions,
+            "Imagery Authenticity": imagery_authenticity,
+            "Imagery Off Archetypes": imagery_off_archetypes,
+            "Imagery Quality": imagery_quality,
+            "Imagery Expression": imagery_expression,
+            "Imagery Diversity": imagery_diversity,
+            "Imagery Beige Appearance": imagery_beige_appearance,
+            "Imagery Other Comments": imagery_other_comments
     }
     # Create a DataFrame with the imagery_notetaking_data
     new_data = pd.DataFrame([imagery_notetaking_data])
