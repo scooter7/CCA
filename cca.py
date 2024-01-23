@@ -231,27 +231,27 @@ def main():
             st.success("Web Imagery Archetyping Data Updated Successfully!")
 
     with st.form("imagery_notetaking"):
-        imagery_record_id = st.number_input("Enter Record ID to Update for Imagery Notetaking", min_value=1, step=1)
-        imagery_dimensions = st.text_area("What dimensions do you see in the archetypes? (For ex. “Caring Purple” vs. “Supportive Purple” and why/how)")
-        imagery_authenticity = st.selectbox("How authentic do particular archetype expressions feel?", range(1, 6))
-        imagery_off_archetypes = st.selectbox("Do any archetypes feel 'off'?", ["Yes", "No"])
-        imagery_quality = st.selectbox("What's the quality like?", range(1, 6))
-        imagery_expression = st.selectbox("How well are the archetypes expressed---do they feel emotive and make sense within the bigger picture?", range(1, 6))
-        imagery_diversity = st.selectbox("Does the imagery represent an adequate amount of diversity?", ["Yes", "No"])
-        imagery_beige_appearance = st.text_area("How and where does Beige appear--in other words, where is the most opportunity for improvement?")
-        imagery_other_comments = st.text_area("Other comments")
-        submit_imagery_notetaking_button = st.form_submit_button("Submit Imagery Notetaking")
+    imagery_record_id = st.number_input("Enter Record ID to Update for Imagery Notetaking", min_value=1, step=1)
+    imagery_dimensions = st.text_area("What dimensions do you see in the archetypes? (For ex. “Caring Purple” vs. “Supportive Purple” and why/how)")
+    imagery_authenticity = st.selectbox("How authentic do particular archetype expressions feel?", range(1, 6))
+    imagery_off_archetypes = st.selectbox("Do any archetypes feel 'off'?", ["Yes", "No"])
+    imagery_quality = st.selectbox("What's the quality like?", range(1, 6))
+    imagery_expression = st.selectbox("How well are the archetypes expressed---do they feel emotive and make sense within the bigger picture?", range(1, 6))
+    imagery_diversity = st.selectbox("Does the imagery represent an adequate amount of diversity?", ["Yes", "No"])
+    imagery_beige_appearance = st.text_area("How and where does Beige appear--in other words, where is the most opportunity for improvement?")
+    imagery_other_comments = st.text_area("Other comments")
+    submit_imagery_notetaking_button = st.form_submit_button("Submit Imagery Notetaking")
 
-    if submit_imagery_notetaking_button:
-        imagery_notetaking_data = {
-            "Imagery Dimensions": imagery_dimensions,
-            "Imagery Authenticity": imagery_authenticity,
-            "Imagery Off Archetypes": imagery_off_archetypes,
-            "Imagery Quality": imagery_quality,
-            "Imagery Expression": imagery_expression,
-            "Imagery Diversity": imagery_diversity,
-            "Imagery Beige Appearance": imagery_beige_appearance,
-            "Imagery Other Comments": imagery_other_comments
+if submit_imagery_notetaking_button:
+    imagery_notetaking_data = {
+        "Imagery Dimensions": imagery_dimensions,
+        "Imagery Authenticity": imagery_authenticity,
+        "Imagery Off Archetypes": imagery_off_archetypes,
+        "Imagery Quality": imagery_quality,
+        "Imagery Expression": imagery_expression,
+        "Imagery Diversity": imagery_diversity,
+        "Imagery Beige Appearance": imagery_beige_appearance,
+        "Imagery Other Comments": imagery_other_comments
     }
     # Create a DataFrame with the imagery_notetaking_data
     new_data = pd.DataFrame([imagery_notetaking_data])
