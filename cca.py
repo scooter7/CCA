@@ -38,11 +38,13 @@ def generate_unique_record_id(existing_data):
 def main():
     st.title("Institutional Analysis Tool")
     s3_client = init_s3_client()
-    
-    # Move the data retrieval from S3 to the beginning
     existing_data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
     
-    # Display the data from S3 at the top of the app
+    # Check if the 'Reload Data from S3' button is clicked
+    if 'data' not in st.session_state or st.button("Reload Data from S3"):
+        st.session_state.data = existing_data
+    
+    # Display the data from S3 if it exists
     if 'data' in st.session_state and st.session_state.data is not None:
         st.write("Data from S3:")
         st.dataframe(st.session_state.data)
