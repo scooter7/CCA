@@ -193,18 +193,18 @@ def main():
                 st.error("Record ID does not exist. Please enter a valid ID.")
 
     with st.form("web_imagery_archetyping"):
-    web_imagery_record_id = st.number_input("Enter Record ID to Update for Web Imagery Archetyping", min_value=1, step=1)
-    web_imagery_purple = st.slider("Web Imagery - Purple Percentage", 0, 100, 10)
-    web_imagery_green = st.slider("Web Imagery - Green Percentage", 0, 100, 10)
-    web_imagery_blue = st.slider("Web Imagery - Blue Percentage", 0, 100, 10)
-    web_imagery_maroon = st.slider("Web Imagery - Maroon Percentage", 0, 100, 10)
-    web_imagery_yellow = st.slider("Web Imagery - Yellow Percentage", 0, 100, 10)
-    web_imagery_orange = st.slider("Web Imagery - Orange Percentage", 0, 100, 10)
-    web_imagery_pink = st.slider("Web Imagery - Pink Percentage", 0, 100, 10)
-    web_imagery_red = st.slider("Web Imagery - Red Percentage", 0, 100, 10)
-    web_imagery_silver = st.slider("Web Imagery - Silver Percentage", 0, 100, 10)
-    web_imagery_beige = st.slider("Web Imagery - Beige Percentage", 0, 100, 10)
-    submit_web_imagery_button = st.form_submit_button("Submit Web Imagery Archetyping")
+        web_imagery_record_id = st.number_input("Enter Record ID to Update for Web Imagery Archetyping", min_value=1, step=1)
+        web_imagery_purple = st.slider("Web Imagery - Purple Percentage", 0, 100, 10)
+        web_imagery_green = st.slider("Web Imagery - Green Percentage", 0, 100, 10)
+        web_imagery_blue = st.slider("Web Imagery - Blue Percentage", 0, 100, 10)
+        web_imagery_maroon = st.slider("Web Imagery - Maroon Percentage", 0, 100, 10)
+        web_imagery_yellow = st.slider("Web Imagery - Yellow Percentage", 0, 100, 10)
+        web_imagery_orange = st.slider("Web Imagery - Orange Percentage", 0, 100, 10)
+        web_imagery_pink = st.slider("Web Imagery - Pink Percentage", 0, 100, 10)
+        web_imagery_red = st.slider("Web Imagery - Red Percentage", 0, 100, 10)
+        web_imagery_silver = st.slider("Web Imagery - Silver Percentage", 0, 100, 10)
+        web_imagery_beige = st.slider("Web Imagery - Beige Percentage", 0, 100, 10)
+        submit_web_imagery_button = st.form_submit_button("Submit Web Imagery Archetyping")
 
     if submit_web_imagery_button:
         web_imagery_data = {
