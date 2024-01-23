@@ -193,68 +193,68 @@ def main():
                 st.error("Record ID does not exist. Please enter a valid ID.")
 
     with st.form("web_imagery_archetyping"):
-        web_imagery_record_id = st.number_input("Enter Record ID to Update for Web Imagery Archetyping", min_value=1, step=1)
-        web_imagery_purple = st.slider("Web Imagery - Purple Percentage", 0, 100, 10)
-        web_imagery_green = st.slider("Web Imagery - Green Percentage", 0, 100, 10)
-        web_imagery_blue = st.slider("Web Imagery - Blue Percentage", 0, 100, 10)
-        web_imagery_maroon = st.slider("Web Imagery - Maroon Percentage", 0, 100, 10)
-        web_imagery_yellow = st.slider("Web Imagery - Yellow Percentage", 0, 100, 10)
-        web_imagery_orange = st.slider("Web Imagery - Orange Percentage", 0, 100, 10)
-        web_imagery_pink = st.slider("Web Imagery - Pink Percentage", 0, 100, 10)
-        web_imagery_red = st.slider("Web Imagery - Red Percentage", 0, 100, 10)
-        web_imagery_silver = st.slider("Web Imagery - Silver Percentage", 0, 100, 10)
-        web_imagery_beige = st.slider("Web Imagery - Beige Percentage", 0, 100, 10)
-        submit_web_imagery_button = st.form_submit_button("Submit Web Imagery Archetyping")
+    web_imagery_record_id = st.number_input("Enter Record ID to Update for Web Imagery Archetyping", min_value=1, step=1)
+    web_imagery_purple = st.slider("Web Imagery - Purple Percentage", 0, 100, 10)
+    web_imagery_green = st.slider("Web Imagery - Green Percentage", 0, 100, 10)
+    web_imagery_blue = st.slider("Web Imagery - Blue Percentage", 0, 100, 10)
+    web_imagery_maroon = st.slider("Web Imagery - Maroon Percentage", 0, 100, 10)
+    web_imagery_yellow = st.slider("Web Imagery - Yellow Percentage", 0, 100, 10)
+    web_imagery_orange = st.slider("Web Imagery - Orange Percentage", 0, 100, 10)
+    web_imagery_pink = st.slider("Web Imagery - Pink Percentage", 0, 100, 10)
+    web_imagery_red = st.slider("Web Imagery - Red Percentage", 0, 100, 10)
+    web_imagery_silver = st.slider("Web Imagery - Silver Percentage", 0, 100, 10)
+    web_imagery_beige = st.slider("Web Imagery - Beige Percentage", 0, 100, 10)
+    submit_web_imagery_button = st.form_submit_button("Submit Web Imagery Archetyping")
 
-        if submit_web_imagery_button:
-            web_imagery_data = {
-                "Web Imagery - Purple": web_imagery_purple,
-                "Web Imagery - Green": web_imagery_green,
-                "Web Imagery - Blue": web_imagery_blue,
-                "Web Imagery - Maroon": web_imagery_maroon,
-                "Web Imagery - Yellow": web_imagery_yellow,
-                "Web Imagery - Orange": web_imagery_orange,
-                "Web Imagery - Pink": web_imagery_pink,
-                "Web Imagery - Red": web_imagery_red,
-                "Web Imagery - Silver": web_imagery_silver,
-                "Web Imagery - Beige": web_imagery_beige
-            }
-            if web_imagery_record_id in existing_data['Record ID'].values:
-                for key, value in web_imagery_data.items():
-                    existing_data.loc[existing_data['Record ID'] == web_imagery_record_id, key] = value
-                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
-                st.success("Web Imagery Archetyping Data Updated Successfully!")
+    if submit_web_imagery_button:
+        web_imagery_data = {
+            "Web Imagery - Purple": web_imagery_purple,
+            "Web Imagery - Green": web_imagery_green,
+            "Web Imagery - Blue": web_imagery_blue,
+            "Web Imagery - Maroon": web_imagery_maroon,
+            "Web Imagery - Yellow": web_imagery_yellow,
+            "Web Imagery - Orange": web_imagery_orange,
+            "Web Imagery - Pink": web_imagery_pink,
+            "Web Imagery - Red": web_imagery_red,
+            "Web Imagery - Silver": web_imagery_silver,
+            "Web Imagery - Beige": web_imagery_beige
+        }
+        if web_imagery_record_id in existing_data['Record ID'].values:
+            for key, value in web_imagery_data.items():
+                existing_data.loc[existing_data['Record ID'] == web_imagery_record_id, key] = value
+            upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+            st.success("Web Imagery Archetyping Data Updated Successfully!")
 
-     with st.form("imagery_notetaking"):
-        imagery_record_id = st.number_input("Enter Record ID to Update for Imagery Notetaking", min_value=1, step=1)
-        imagery_dimensions = st.text_area("What dimensions do you see in the archetypes? (For ex. “Caring Purple” vs. “Supportive Purple” and why/how)")
-        imagery_authenticity = st.selectbox("How authentic do particular archetype expressions feel?", range(1, 6))
-        imagery_off_archetypes = st.selectbox("Do any archetypes feel 'off'?", ["Yes", "No"])
-        imagery_quality = st.selectbox("What's the quality like?", range(1, 6))
-        imagery_expression = st.selectbox("How well are the archetypes expressed---do they feel emotive and make sense within the bigger picture?", range(1, 6))
-        imagery_diversity = st.selectbox("Does the imagery represent an adequate amount of diversity?", ["Yes", "No"])
-        imagery_beige_appearance = st.text_area("How and where does Beige appear--in other words, where is the most opportunity for improvement?")
-        imagery_other_comments = st.text_area("Other comments")
-        submit_imagery_notetaking_button = st.form_submit_button("Submit Imagery Notetaking")
+with st.form("imagery_notetaking"):
+    imagery_record_id = st.number_input("Enter Record ID to Update for Imagery Notetaking", min_value=1, step=1)
+    imagery_dimensions = st.text_area("What dimensions do you see in the archetypes? (For ex. “Caring Purple” vs. “Supportive Purple” and why/how)")
+    imagery_authenticity = st.selectbox("How authentic do particular archetype expressions feel?", range(1, 6))
+    imagery_off_archetypes = st.selectbox("Do any archetypes feel 'off'?", ["Yes", "No"])
+    imagery_quality = st.selectbox("What's the quality like?", range(1, 6))
+    imagery_expression = st.selectbox("How well are the archetypes expressed---do they feel emotive and make sense within the bigger picture?", range(1, 6))
+    imagery_diversity = st.selectbox("Does the imagery represent an adequate amount of diversity?", ["Yes", "No"])
+    imagery_beige_appearance = st.text_area("How and where does Beige appear--in other words, where is the most opportunity for improvement?")
+    imagery_other_comments = st.text_area("Other comments")
+    submit_imagery_notetaking_button = st.form_submit_button("Submit Imagery Notetaking")
 
-        if submit_imagery_notetaking_button:
-            imagery_notetaking_data = {
-                "Imagery Dimensions": imagery_dimensions,
-                "Imagery Authenticity": imagery_authenticity,
-                "Imagery Off Archetypes": imagery_off_archetypes,
-                "Imagery Quality": imagery_quality,
-                "Imagery Expression": imagery_expression,
-                "Imagery Diversity": imagery_diversity,
-                "Imagery Beige Appearance": imagery_beige_appearance,
-                "Imagery Other Comments": imagery_other_comments
-            }
-            new_data = pd.DataFrame([imagery_notetaking_data])
-            if imagery_record_id in existing_data['Record ID'].values:
-                existing_data.update(new_data.set_index('Record ID'), overwrite=False)
-                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
-                st.success("Imagery Notetaking Data Updated Successfully!")
-            else:
-                st.error("Record ID does not exist. Please enter a valid ID.")
+    if submit_imagery_notetaking_button:
+        imagery_notetaking_data = {
+            "Imagery Dimensions": imagery_dimensions,
+            "Imagery Authenticity": imagery_authenticity,
+            "Imagery Off Archetypes": imagery_off_archetypes,
+            "Imagery Quality": imagery_quality,
+            "Imagery Expression": imagery_expression,
+            "Imagery Diversity": imagery_diversity,
+            "Imagery Beige Appearance": imagery_beige_appearance,
+            "Imagery Other Comments": imagery_other_comments
+        }
+        new_data = pd.DataFrame([imagery_notetaking_data])
+        if imagery_record_id in existing_data['Record ID'].values:
+            existing_data.update(new_data.set_index('Record ID'), overwrite=False)
+            upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+            st.success("Imagery Notetaking Data Updated Successfully!")
+        else:
+            st.error("Record ID does not exist. Please enter a valid ID.")
 
 if __name__ == "__main__":
     main()
