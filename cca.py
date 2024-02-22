@@ -1,31 +1,41 @@
-import pandas as pd
 import streamlit as st
-import datetime
+import pandas as pd
+from datetime import datetime
 import boto3
+from botocore.exceptions import NoCredentialsError
+
+AWS_ACCESS_KEY_ID = st.secrets["AWS_ACCESS_KEY_ID"]
+AWS_SECRET_ACCESS_KEY = st.secrets["AWS_SECRET_ACCESS_KEY"]
+bucket_name = "Scooter"
+object_key = "competitiveanalyses.csv"
 
 def init_s3_client():
-    return boto3.client('s3')
+    return boto3.client('s3', aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY)
 
-def download_from_s3(s3_client, bucket, key):
+def download_from_s3(client, bucket, key):
     try:
-        obj = s3_client.get_object(Bucket=bucket, Key=key)
+        obj = client.get_object(Bucket=bucket, Key=key)
         return pd.read_csv(obj['Body'])
-    except s3_client.exceptions.NoSuchKey:
+    except:
         return pd.DataFrame()
 
-def upload_to_s3(s3_client, data, bucket, key):
-    csv_buffer = StringIO()
-    data.to_csv(csv_buffer, index=False)
-    s3_client.put_object(Bucket=bucket, Key=key, Body=csv_buffer.getvalue())
+def upload_to_s3(client, df, bucket, key):
+    try:
+        csv_buffer = df.to_csv(index=False).encode()
+        client.put_object(Bucket=bucket, Key=key, Body=csv_buffer)
+        st.success("Data Uploaded Successfully to S3!")
+    except NoCredentialsError:
+        st.error("Credentials not available")
 
 def display_data_table(data):
+    st.write("## Current Data Table")
     st.write(data)
 
 def main():
     st.title("Institutional Analysis Tool")
     s3_client = init_s3_client()
 
-    existing_data = download_from_s3(s3_client, 'Scooter', 'competitiveanalyses.csv')
+    existing_data = download_from_s3(s3_client, bucket_name, object_key)
     if 'data' not in st.session_state or st.button("Reload Data from S3"):
         st.session_state.data = existing_data
     if 'data' in st.session_state and st.session_state.data is not None:
@@ -63,7 +73,7 @@ def main():
                 else:
                     existing_data.update(new_data)
                     consolidated_data = existing_data
-                upload_to_s3(s3_client, consolidated_data, 'Scooter', 'competitiveanalyses.csv')
+                upload_to_s3(s3_client, consolidated_data, bucket_name, object_key)
                 st.success("Institution Info Saved Successfully!")
 
     with st.form("narrative_notetaking"):
@@ -100,7 +110,7 @@ def main():
                 }
                 for key, value in narrative_data.items():
                     existing_data.loc[existing_data['Record ID'] == narrative_record_id, key] = value
-                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                upload_to_s3(s3_client, existing_data, bucket_name, object_key)
                 st.success("Narrative Analysis Updated Successfully!")
             else:
                 st.error("Record ID does not exist. Please enter a valid ID.")
@@ -118,7 +128,7 @@ def main():
                 web_design_data = {f"Web Design - {color} Percentage": percentage for color, percentage in web_design_archetypes.items()}
                 for key, value in web_design_data.items():
                     existing_data.loc[existing_data['Record ID'] == web_design_record_id, key] = value
-                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                upload_to_s3(s3_client, existing_data, bucket_name, object_key)
                 st.success("Web Design Archetyping Data Updated Successfully!")
 
     with st.form("web_design_notetaking"):
@@ -152,7 +162,7 @@ def main():
                 }
                 for key, value in web_design_note_data.items():
                     existing_data.loc[existing_data['Record ID'] == web_design_note_record_id, key] = value
-                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                upload_to_s3(s3_client, existing_data, bucket_name, object_key)
                 st.success("Web Design Notetaking Data Updated Successfully!")
             else:
                 st.error("Record ID does not exist. Please enter a valid ID.")
@@ -170,7 +180,7 @@ def main():
                 web_imagery_data = {f"Web Imagery - {color} Percentage": percentage for color, percentage in web_imagery_archetypes.items()}
                 for key, value in web_imagery_data.items():
                     existing_data.loc[existing_data['Record ID'] == web_imagery_record_id, key] = value
-                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                upload_to_s3(s3_client, existing_data, bucket_name, object_key)
                 st.success("Web Imagery Archetyping Data Updated Successfully!")
 
     with st.form("web_imagery_notetaking"):
@@ -204,7 +214,7 @@ def main():
                 }
                 for key, value in web_imagery_note_data.items():
                     existing_data.loc[existing_data['Record ID'] == web_imagery_note_record_id, key] = value
-                upload_to_s3(s3_client, existing_data, 'Scooter', 'competitiveanalyses.csv')
+                upload_to_s3(s3_client, existing_data, bucket_name, object_key)
                 st.success("Web Imagery Notetaking Data Updated Successfully!")
             else:
                 st.error("Record ID does not exist. Please enter a valid ID.")
